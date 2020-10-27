@@ -1,3 +1,10 @@
+#`````````````````````````````
+#
+#    Developed by Ivan Seagull
+#
+#`````````````````````````````
+
+
 # Подключение всех необходимых библиотек
 # Нам нужно: speech_recognition, os, sys, webbrowser
 # Для первой бибилотеки прописываем также псевдоним
@@ -14,7 +21,7 @@ import tkinter as tk #создавать вспомогательные окна
 import pyowm # для погоды
 import keyboard
 #обращение команды и слова
-path = "D:\ваня2018"
+path = "Ваш путь для папок"
 opts = {
     "alias": ('субота','суббота','субботик','субба'),
     "tbr": ('скажи','расскажи','покажи','сколько','произнеси'),
@@ -36,7 +43,7 @@ opts = {
 }
 
 
-
+#обрабатываем звук
 def callback(recognizer, audio):
     try:
         voice = recognizer.recognize_google(audio, language = "ru-RU").lower()
@@ -61,6 +68,7 @@ def callback(recognizer, audio):
     except sr.RequestError as e:
         print("[log] Неизвестная ошибка, проверьте интернет!")
 
+#получаем команду из звука
 def recognize_cmd(cmd):
     RC = {'cmd': '', 'percent': 0}
     for c,v in opts['cmds'].items():
@@ -73,30 +81,29 @@ def recognize_cmd(cmd):
 
     return RC
 
+#выполняем команду
 def execute_cmd(cmd):
     if cmd == 'ctime':
         # сказать текущее время
         now = datetime.datetime.now()
         #print(now)
-        #speak_engine.say( "Сейчас " + str(now.hour) + ":" + str(now.minute))
-        #speak_engine.runAndWait()
-        #speak_engine.stop()
         speak("Сейчас " + str(now.hour) + ":" + str(now.minute))
 
     elif cmd == 'radio':
         # воспроизвести радио
-        #os.startfile(r'c:/Program Files/Mozilla Firefox/firefox.exe')
+        os.startfile(r'Путь к радио')
         pass
-
+    #
     elif cmd == 'HowAreYou':
         speak('Хорошо, спасибо что спросили')
-
+    
+    #Вывести календарь
     elif cmd=="calendar":
         now = datetime.datetime.now()
         print (c.formatmonth(now.year,now.month))
-
+    
+    # рассказать анекдот
     elif cmd == 'stupid1':
-        # рассказать анекдот
         joke = random.randint(1, 5)
         print(joke)
         if joke == 1:
@@ -110,21 +117,21 @@ def execute_cmd(cmd):
         elif joke == 5:
             speak("Сантехник Сидоров был весьма удивлен, когда засунул руку в унитаз и ощутил чье- то ответное крепкое рукопожатие.")
 
-
+    #запустить программу ардуино
     elif cmd == 'opnArduino':
-        #arduino
        speak ("открываю arduino")
-       os.startfile(r'D:\Program Files (x86)\Arduino\arduino.exe')
+       os.startfile(r'Ваш путь к программе')
 
+    #запустить атом
     elif cmd == 'opnAtom':
-       #arduino
        speak ("открываю atom")
-       os.startfile(r'C:\Users\Ivan\AppData\Local\atom\atom.exe')
-
+       os.startfile(r'Ваш путь к программе')
+    
+    # создай папку
     elif cmd == 'newFolder':
-        # создай папку
-        path = "D:\ваня2018"
+        #path = "Ваша папка"
         speak("Как называется папка?")
+        #Запускаем окно
         maketk()
         #projectname=str(input("Kак называется папка:   "))
         fullpath = os.path.join(path, name) #projectname)
@@ -133,38 +140,36 @@ def execute_cmd(cmd):
 
         os.mkdir(fullpath)
 
-        # открываем браузер
+    # открываем vk
     elif cmd == 'opnVK':
         speak("Открываю vk")
         webbrowser.open("https://vk.com/feed")
-
+        
+    # открываем браузер
     elif cmd == 'opnBrowser':
         speak("Открываю")
         webbrowser.open("www.google.com")
 
-
+    #показывать температуру
     elif cmd == 'temperatura':
-        #weather
        speak ("Температура в Москве "+str(temperature)+" по цельсию")
-
+    #
+    показывать погоду
     elif cmd == 'weather':
-       #weather
       speak ("В Москве сейчас " + w.get_detailed_status())
 
-
-
-
+    #закрыть программу
     elif cmd == 'close':
-        #pass
         speak("Пока")
         sys.exit()
 
+    #Неизвестная команда
     else:
         print('Команда не распознана, повторите!')
 
 
 
-
+#функция разговора
 def speak(what):
     print( what )
     speak_engine.say( what )
@@ -177,6 +182,8 @@ def speak(what):
 def Makefolder():
      global name
      name=edit.get()
+     # Так. Я писал это два года назад вроде, когда учился программировать. Я бы мог это убрать и не позориться, 
+     # но решил оставить так, чтобы помнить, с чего начинал. Ну и поржать конечно же
      if name=="":
           pass
      elif name== " ":
@@ -193,6 +200,7 @@ def Makefolder():
           print(name)
           w1.destroy()
 
+#создание окна
 def maketk():
 #okno
      global w1
@@ -223,7 +231,7 @@ def maketk():
      w1.mainloop()
 
 
-
+#Получаем погоду
 def weather():
     global weatherValue
     weatherValue=0
@@ -246,8 +254,7 @@ def weather():
 
 
 
-#скелет субботы
-
+#тупая инициализация все что можно было
 r = sr.Recognizer()
 m = sr.Microphone(device_index = 1)
 with m as source:
@@ -260,21 +267,13 @@ c = calendar.TextCalendar(0)
 # именно эта строка будет проговорена компьютером
 #speak("Привет, чем я могу помочь вам?")
 speak("Добрый день, повелитель")
-speak("Суббота слушает")
+speak("Джарвис слушает")
 
 weather()
 
 def listen():
     while True:
         print("[log] Можете говорить")
-
-        #if keyboard.is_pressed('Shift + Alt + q'):
-            #print("[log] Вы вышли")
-            #return True
-            #break
-
-        #r = sr.Recognizer()
-        #with sr.Microphone() as source:
         with m as source:
             r.adjust_for_ambient_noise(source, duration=1)
             audio = r.listen(source)
@@ -283,20 +282,8 @@ def listen():
             return False
 
 
-#def Main():
-    #while True:
-        #res=listen()
-        #if res:
-            #print(res)
-            #break
-
-        #makeSomething(command())
-
-
-
 while True:
     if keyboard.is_pressed('Shift + Alt + s'):
         print("Log")
         if listen():
             break
-        #Main()
